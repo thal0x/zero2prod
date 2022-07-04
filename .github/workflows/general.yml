@@ -7,7 +7,7 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened ]
     branches:
-      - main      
+      - main
 
 env:
   CARGO_TERM_COLOR: always
@@ -26,7 +26,7 @@ jobs:
         ports:
           - 5432:5432
     env:
-      SQLX_VERSION: 0.5.5
+      SQLX_VERSION: 0.5.7
       SQLX_FEATURES: postgres
     steps:
       - name: Checkout repository
@@ -55,6 +55,7 @@ jobs:
         with:
           path: |
             ~/.cargo/bin/sqlx
+            ~/.cargo/bin/cargo-sqlx
           key: ${{ runner.os }}-sqlx-${{ env.SQLX_VERSION }}-${{ env.SQLX_FEATURES }}
 
       - name: Install sqlx-cli 
@@ -68,7 +69,7 @@ jobs:
             --version=${{ env.SQLX_VERSION }}
             --features=${{ env.SQLX_FEATURES }}
             --no-default-features
-            --locked                             
+            --locked
 
       - name: Migrate database
         run: |
@@ -83,7 +84,7 @@ jobs:
       - name: Run cargo test
         uses: actions-rs/cargo@v1
         with:
-          command: test          
+          command: test
 
   fmt:
     name: Rustfmt
